@@ -9,7 +9,6 @@ import {
   Cog8ToothIcon,
   // CommandLineIcon,
   Squares2X2Icon,
-  // eslint-disable-next-line sort-imports
   PuzzlePieceIcon,
   DocumentTextIcon,
   PaperClipIcon,

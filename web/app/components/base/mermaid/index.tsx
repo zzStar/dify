@@ -82,7 +82,7 @@ const Flowchart = React.forwardRef((props: {
   }, [props.PrimitiveCode])
 
   return (
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // eslint-disable-next-line ts/ban-ts-comment
     // @ts-expect-error
     <div ref={ref}>
       {
@@ -107,5 +107,7 @@ const Flowchart = React.forwardRef((props: {
     </div>
   )
 })
+
+Flowchart.displayName = 'Flowchart'
 
 export default Flowchart
