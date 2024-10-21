@@ -63,6 +63,7 @@ const RuleDetail: FC<{ sourceData?: ProcessRuleResponse }> = ({ sourceData }) =>
       default:
         value = sourceData?.mode === 'automatic'
           ? (t('datasetDocuments.embedding.automatic') as string)
+          // eslint-disable-next-line array-callback-return
           : sourceData?.rules?.pre_processing_rules?.map((rule) => {
             if (rule.enabled)
               return getRuleName(rule.id)
