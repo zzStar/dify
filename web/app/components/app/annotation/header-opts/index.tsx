@@ -1,6 +1,6 @@
 'use client'
 import type { FC } from 'react'
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   RiAddLine,
@@ -9,7 +9,7 @@ import { useContext } from 'use-context-selector'
 import {
   useCSVDownloader,
 } from 'react-papaparse'
-import { Menu, Transition } from '@headlessui/react'
+import { Menu, MenuButton, MenuItems, Transition } from '@headlessui/react'
 import Button from '../../../base/button'
 import AddAnnotationModal from '../add-annotation-modal'
 import type { AnnotationItemBasic } from '../type'
@@ -87,13 +87,12 @@ const HeaderOptions: FC<Props> = ({
           <span className={s.actionName}>{t('appAnnotation.table.header.bulkImport')}</span>
         </button>
         <Menu as="div" className="relative w-full h-full">
-          <Menu.Button className={s.actionItem}>
+          <MenuButton className={s.actionItem}>
             <FileDownload02 className={s.actionItemIcon} />
             <span className={s.actionName}>{t('appAnnotation.table.header.bulkExport')}</span>
             <ChevronRight className='shrink-0 w-[14px] h-[14px] text-gray-500' />
-          </Menu.Button>
+          </MenuButton>
           <Transition
-            as={Fragment}
             enter="transition ease-out duration-100"
             enterFrom="transform opacity-0 scale-95"
             enterTo="transform opacity-100 scale-100"
@@ -101,7 +100,7 @@ const HeaderOptions: FC<Props> = ({
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items
+            <MenuItems
               className={cn(
                 `
                   absolute top-[1px] py-1 min-w-[100px] z-10 bg-white border-[0.5px] border-gray-200
@@ -126,7 +125,7 @@ const HeaderOptions: FC<Props> = ({
               <button disabled={annotationUnavailable} className={cn(s.actionItem, '!border-0')} onClick={JSONLOutput}>
                 <span className={s.actionName}>JSONL</span>
               </button>
-            </Menu.Items>
+            </MenuItems>
           </Transition>
         </Menu>
       </div>

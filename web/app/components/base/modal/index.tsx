@@ -1,5 +1,4 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Description, Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import classNames from '@/utils/classnames'
 // https://headlessui.com/react/dialog
@@ -28,10 +27,9 @@ export default function Modal({
   overflowVisible = false,
 }: IModal) {
   return (
-    <Transition appear show={isShow} as={Fragment}>
+    <Transition appear show={isShow}>
       <Dialog as="div" className={classNames('modal-dialog', wrapperClassName)} onClose={onClose}>
-        <Transition.Child
-          as={Fragment}
+        <TransitionChild
           enter="ease-out duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
@@ -40,7 +38,7 @@ export default function Modal({
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-black bg-opacity-25" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div
           className="fixed inset-0 overflow-y-auto"
@@ -50,8 +48,7 @@ export default function Modal({
           }}
         >
           <div className="flex min-h-full items-center justify-center p-4 text-center">
-            <Transition.Child
-              as={Fragment}
+            <TransitionChild
               enter="ease-out duration-300"
               enterFrom="opacity-0 scale-95"
               enterTo="opacity-100 scale-100"
@@ -59,20 +56,20 @@ export default function Modal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className={classNames(
+              <DialogPanel className={classNames(
                 'modal-panel',
                 overflowVisible ? 'overflow-visible' : 'overflow-hidden',
                 className,
               )}>
-                {title && <Dialog.Title
+                {title && <DialogTitle
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
                   {title}
-                </Dialog.Title>}
-                {description && <Dialog.Description className='text-gray-500 text-xs font-normal mt-2'>
+                </DialogTitle>}
+                {description && <Description className='text-gray-500 text-xs font-normal mt-2'>
                   {description}
-                </Dialog.Description>}
+                </Description>}
                 {closable
                   && <div className='absolute z-10 top-6 right-6 w-5 h-5 rounded-2xl flex items-center justify-center hover:cursor-pointer hover:bg-gray-100'>
                     <XMarkIcon className='w-4 h-4 text-gray-500' onClick={
@@ -83,8 +80,8 @@ export default function Modal({
                     } />
                   </div>}
                 {children}
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>

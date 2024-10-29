@@ -1,6 +1,6 @@
-import { Fragment, useCallback } from 'react'
+import { useCallback } from 'react'
 import type { ElementType, ReactNode } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from '@headlessui/react'
 import classNames from '@/utils/classnames'
 
 // https://headlessui.com/react/dialog
@@ -32,10 +32,9 @@ const CustomDialog = ({
 }: DialogProps) => {
   const close = useCallback(() => onClose?.(), [onClose])
   return (
-    <Transition appear show={show} as={Fragment}>
+    <Transition appear show={show}>
       <Dialog as="div" className="relative z-40" onClose={close}>
-        <Transition.Child
-          as={Fragment}
+        <TransitionChild
           enter="ease-out duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
@@ -44,12 +43,11 @@ const CustomDialog = ({
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-black bg-opacity-25" />
-        </Transition.Child>
+        </TransitionChild>
 
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex items-center justify-center min-h-full p-4 text-center">
-            <Transition.Child
-              as={Fragment}
+            <TransitionChild
               enter="ease-out duration-300"
               enterFrom="opacity-0 scale-95"
               enterTo="opacity-100 scale-100"
@@ -57,14 +55,14 @@ const CustomDialog = ({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className={classNames('w-full max-w-[800px] p-0 overflow-hidden text-left text-gray-900 align-middle transition-all transform bg-white shadow-xl rounded-2xl', className)}>
+              <DialogPanel className={classNames('w-full max-w-[800px] p-0 overflow-hidden text-left text-gray-900 align-middle transition-all transform bg-white shadow-xl rounded-2xl', className)}>
                 {Boolean(title) && (
-                  <Dialog.Title
+                  <DialogTitle
                     as={titleAs || 'h3'}
                     className={classNames('px-8 py-6 text-lg font-medium leading-6 text-gray-900', titleClassName)}
                   >
                     {title}
-                  </Dialog.Title>
+                  </DialogTitle>
                 )}
                 <div className={classNames('px-8 text-lg font-medium leading-6', bodyClassName)}>
                   {children}
@@ -74,8 +72,8 @@ const CustomDialog = ({
                     {footer}
                   </div>
                 )}
-              </Dialog.Panel>
-            </Transition.Child>
+              </DialogPanel>
+            </TransitionChild>
           </div>
         </div>
       </Dialog>

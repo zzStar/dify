@@ -1,14 +1,13 @@
 'use client'
 import { useTranslation } from 'react-i18next'
-import { Fragment } from 'react'
 import { useRouter } from 'next/navigation'
-import { Menu, Transition } from '@headlessui/react'
+import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 import Avatar from '@/app/components/base/avatar'
 import { logout } from '@/service/common'
 import { useAppContext } from '@/context/app-context'
 import { LogOut01 } from '@/app/components/base/icons/src/vender/line/general'
 
-export interface IAppSelector {
+export type IAppSelector = {
   isMobile: boolean
 }
 
@@ -35,7 +34,7 @@ export default function AppSelector() {
         ({ open }) => (
           <>
             <div>
-              <Menu.Button
+              <MenuButton
                 className={`
                     inline-flex items-center
                     rounded-[20px] p-1x text-sm
@@ -45,10 +44,9 @@ export default function AppSelector() {
                   `}
               >
                 <Avatar name={userProfile.name} size={32} />
-              </Menu.Button>
+              </MenuButton>
             </div>
             <Transition
-              as={Fragment}
               enter="transition ease-out duration-100"
               enterFrom="transform opacity-0 scale-95"
               enterTo="transform opacity-100 scale-100"
@@ -56,14 +54,14 @@ export default function AppSelector() {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items
+              <MenuItems
                 className="
                     absolute -right-2 -top-1 w-60 max-w-80
                     divide-y divide-gray-100 origin-top-right rounded-lg bg-white
                     shadow-lg
                   "
               >
-                <Menu.Item>
+                <MenuItem>
                   <div className='p-1'>
                     <div className='flex flex-nowrap items-center px-3 py-2'>
                       <div className='grow'>
@@ -73,8 +71,8 @@ export default function AppSelector() {
                       <Avatar name={userProfile.name} size={32} />
                     </div>
                   </div>
-                </Menu.Item>
-                <Menu.Item>
+                </MenuItem>
+                <MenuItem>
                   <div className='p-1' onClick={() => handleLogout()}>
                     <div
                       className='flex items-center justify-start h-9 px-3 rounded-lg cursor-pointer group hover:bg-gray-50'
@@ -83,8 +81,8 @@ export default function AppSelector() {
                       <div className='font-normal text-[14px] text-gray-700'>{t('common.userProfile.logout')}</div>
                     </div>
                   </div>
-                </Menu.Item>
-              </Menu.Items>
+                </MenuItem>
+              </MenuItems>
             </Transition>
           </>
         )

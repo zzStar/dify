@@ -1,7 +1,7 @@
 'use client'
 import type { FC } from 'react'
-import React, { Fragment, useEffect, useState } from 'react'
-import { Combobox, Listbox, Transition } from '@headlessui/react'
+import React, { useEffect, useState } from 'react'
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Listbox, ListboxButton, ListboxOption, ListboxOptions, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { useTranslation } from 'react-i18next'
 import classNames from '@/utils/classnames'
@@ -26,7 +26,7 @@ export type Item = {
   name: string
 } & Record<string, any>
 
-export interface ISelectProps {
+export type ISelectProps = {
   className?: string
   wrapperClassName?: string
   renderTrigger?: (value: Item | null) => JSX.Element | null
@@ -99,7 +99,7 @@ const Select: FC<ISelectProps> = ({
       <div className={classNames('relative')}>
         <div className='group text-gray-800'>
           {allowSearch
-            ? <Combobox.Input
+            ? <ComboboxInput
               className={`w-full rounded-lg border-0 ${bgClassName} py-1.5 pl-3 pr-10 shadow-sm sm:text-sm sm:leading-6 focus-visible:outline-none focus-visible:bg-gray-200 group-hover:bg-gray-200 ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               onChange={(event) => {
                 if (!disabled)
@@ -107,28 +107,29 @@ const Select: FC<ISelectProps> = ({
               }}
               displayValue={(item: Item) => item?.name}
             />
-            : <Combobox.Button onClick={
+            : <ComboboxButton onClick={
               () => {
                 if (!disabled)
                   setOpen(!open)
               }
             } className={classNames(`flex items-center h-9 w-full rounded-lg border-0 ${bgClassName} py-1.5 pl-3 pr-10 shadow-sm sm:text-sm sm:leading-6 focus-visible:outline-none focus-visible:bg-gray-200 group-hover:bg-gray-200`, optionClassName)}>
               <div className='w-0 grow text-left truncate' title={selectedItem?.name}>{selectedItem?.name}</div>
-            </Combobox.Button>}
-          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none group-hover:bg-gray-200" onClick={
+            </ComboboxButton>}
+          <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none group-hover:bg-gray-200" onClick={
             () => {
               if (!disabled)
                 setOpen(!open)
             }
           }>
             {open ? <ChevronUpIcon className="h-5 w-5" /> : <ChevronDownIcon className="h-5 w-5" />}
-          </Combobox.Button>
+          </ComboboxButton>
         </div>
 
         {filteredItems.length > 0 && (
-          <Combobox.Options className={`absolute z-10 mt-1 px-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg border-gray-200 border-[0.5px] focus:outline-none sm:text-sm ${overlayClassName}`}>
+          <ComboboxOptions className={`absolute z-10 mt-1 px-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg border-gray-200 border-[0.5px] focus:outline-none sm:text-sm ${overlayClassName}`} as='ul'>
             {filteredItems.map((item: Item) => (
-              <Combobox.Option
+              <ComboboxOption
+                as='li'
                 key={item.value}
                 value={item}
                 className={({ active }: { active: boolean }) =>
@@ -159,9 +160,9 @@ const Select: FC<ISelectProps> = ({
                       )}
                   </>
                 )}
-              </Combobox.Option>
+              </ComboboxOption>
             ))}
-          </Combobox.Options>
+          </ComboboxOptions>
         )}
       </div>
     </Combobox >
@@ -208,9 +209,9 @@ const SimpleSelect: FC<ISelectProps> = ({
       }}
     >
       <div className={classNames('group/simple-select relative h-9', wrapperClassName)}>
-        {renderTrigger && <Listbox.Button className='w-full'>{renderTrigger(selectedItem)}</Listbox.Button>}
+        {renderTrigger && <ListboxButton className='w-full'>{renderTrigger(selectedItem)}</ListboxButton>}
         {!renderTrigger && (
-          <Listbox.Button className={classNames(`flex items-center w-full h-full rounded-lg border-0 bg-gray-100 pl-3 pr-10 sm:text-sm sm:leading-6 focus-visible:outline-none focus-visible:bg-gray-200 group-hover/simple-select:bg-state-base-hover-alt ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`, className)}>
+          <ListboxButton className={classNames(`flex items-center w-full h-full rounded-lg border-0 bg-gray-100 pl-3 pr-10 sm:text-sm sm:leading-6 focus-visible:outline-none focus-visible:bg-gray-200 group-hover/simple-select:bg-state-base-hover-alt ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`, className)}>
             <span className={classNames('block truncate text-left system-sm-regular text-components-input-text-filled', !selectedItem?.name && 'text-components-input-text-placeholder')}>{selectedItem?.name ?? localPlaceholder}</span>
             <span className="absolute inset-y-0 right-0 flex items-center pr-2">
               {(selectedItem && !notClearable)
@@ -232,24 +233,24 @@ const SimpleSelect: FC<ISelectProps> = ({
                   />
                 )}
             </span>
-          </Listbox.Button>
+          </ListboxButton>
         )}
 
         {!disabled && (
           <Transition
-            as={Fragment}
             leave="transition ease-in duration-100"
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
 
-            <Listbox.Options className={classNames('absolute z-10 mt-1 px-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg border-gray-200 border-[0.5px] focus:outline-none sm:text-sm', optionWrapClassName)}>
+            <ListboxOptions className={classNames('absolute z-10 mt-1 px-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg border-gray-200 border-[0.5px] focus:outline-none sm:text-sm', optionWrapClassName)} as="ul">
               {items.map((item: Item) => (
-                <Listbox.Option
+                <ListboxOption
+                  as='li'
                   key={item.value}
-                  className={({ active }) =>
+                  className={({ focus }) =>
                     classNames(
-                      `relative cursor-pointer select-none py-2 pl-3 pr-9 rounded-lg hover:bg-gray-100 text-gray-700 ${active ? 'bg-gray-100' : ''}`,
+                      `relative cursor-pointer select-none py-2 pl-3 pr-9 rounded-lg hover:bg-gray-100 text-gray-700 ${focus ? 'bg-gray-100' : ''}`,
                       optionClassName,
                     )
                   }
@@ -274,9 +275,9 @@ const SimpleSelect: FC<ISelectProps> = ({
                         </>)}
                     </>
                   )}
-                </Listbox.Option>
+                </ListboxOption>
               ))}
-            </Listbox.Options>
+            </ListboxOptions>
           </Transition>
         )}
       </div>
@@ -284,7 +285,7 @@ const SimpleSelect: FC<ISelectProps> = ({
   )
 }
 
-interface PortalSelectProps {
+type PortalSelectProps = {
   value: string | number
   onSelect: (value: Item) => void
   items: Item[]

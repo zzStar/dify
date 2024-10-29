@@ -1,5 +1,5 @@
-import { Popover, Transition } from '@headlessui/react'
-import { Fragment, cloneElement, useRef } from 'react'
+import { Popover, PopoverButton, PopoverPanel, Transition } from '@headlessui/react'
+import { cloneElement, useRef } from 'react'
 import s from './style.module.css'
 import cn from '@/utils/classnames'
 
@@ -60,7 +60,7 @@ export default function CustomPopover({
                   onMouseEnter: () => onMouseEnter(open),
                 })}
             >
-              <Popover.Button
+              <PopoverButton
                 ref={buttonRef}
                 disabled={disabled}
                 className={`group ${s.popupBtn} ${open ? '' : 'bg-gray-100'} ${!btnClassName
@@ -71,9 +71,9 @@ export default function CustomPopover({
                 }`}
               >
                 {btnElement}
-              </Popover.Button>
-              <Transition as={Fragment}>
-                <Popover.Panel
+              </PopoverButton>
+              <Transition>
+                <PopoverPanel
                   className={cn(
                     s.popupPanel,
                     position === 'bottom' && '-translate-x-1/2 left-1/2',
@@ -110,7 +110,7 @@ export default function CustomPopover({
                       })}
                     </div>
                   )}
-                </Popover.Panel>
+                </PopoverPanel>
               </Transition>
             </div>
           </>

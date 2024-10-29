@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { useContext } from 'use-context-selector'
 import { useTranslation } from 'react-i18next'
-import { Menu, Transition } from '@headlessui/react'
+import { Menu, MenuButton, MenuItems, Transition } from '@headlessui/react'
 import { RiArrowDownSLine } from '@remixicon/react'
 import cn from '@/utils/classnames'
 import { switchWorkspace } from '@/service/common'
@@ -34,7 +34,7 @@ const WorkplaceSelector = () => {
       {
         ({ open }) => (
           <>
-            <Menu.Button className={cn(
+            <MenuButton className={cn(
               `
                 flex items-center p-0.5 gap-1.5 w-full
                 group hover:bg-state-base-hover cursor-pointer ${open && 'bg-state-base-hover'} rounded-[10px]
@@ -43,9 +43,8 @@ const WorkplaceSelector = () => {
               <div className='flex items-center justify-center w-7 h-7 bg-[#EFF4FF] rounded-md text-xs font-medium text-primary-600'>{currentWorkspace?.name[0].toLocaleUpperCase()}</div>
               <div className={'truncate max-w-[80px] text-text-secondary system-sm-medium'}>{currentWorkspace?.name}</div>
               <RiArrowDownSLine className='w-4 h-4 text-text-secondary' />
-            </Menu.Button>
+            </MenuButton>
             <Transition
-              as={Fragment}
               enter="transition ease-out duration-100"
               enterFrom="transform opacity-0 scale-95"
               enterTo="transform opacity-100 scale-100"
@@ -53,7 +52,7 @@ const WorkplaceSelector = () => {
               leaveFrom="transform opacity-100 scale-100"
               leaveTo="transform opacity-0 scale-95"
             >
-              <Menu.Items
+              <MenuItems
                 className={cn(
                   `
                     flex w-[280px] flex-col items-start absolute left-[-15px] mt-1 rounded-xl shadows-shadow-lg
@@ -78,7 +77,7 @@ const WorkplaceSelector = () => {
                     ))
                   }
                 </div>
-              </Menu.Items>
+              </MenuItems>
             </Transition>
           </>
         )
