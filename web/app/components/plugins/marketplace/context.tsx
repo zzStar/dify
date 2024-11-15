@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react'
 import {
-  createContext,
   useContextSelector,
 } from 'use-context-selector'
 import { PLUGIN_TYPE_SEARCH_MAP } from './plugin-type-switch'
@@ -23,6 +22,7 @@ import {
   useMarketplaceCollectionsAndPlugins,
   useMarketplacePlugins,
 } from './hooks'
+import { createSelectorCtx } from '@/utils/context'
 
 export type MarketplaceContextValue = {
   intersected: boolean
@@ -44,25 +44,7 @@ export type MarketplaceContextValue = {
   isLoading: boolean
 }
 
-export const MarketplaceContext = createContext<MarketplaceContextValue>({
-  intersected: true,
-  setIntersected: () => {},
-  searchPluginText: '',
-  handleSearchPluginTextChange: () => {},
-  filterPluginTags: [],
-  handleFilterPluginTagsChange: () => {},
-  activePluginType: PLUGIN_TYPE_SEARCH_MAP.all,
-  handleActivePluginTypeChange: () => {},
-  plugins: undefined,
-  resetPlugins: () => {},
-  sort: DEFAULT_SORT,
-  handleSortChange: () => {},
-  marketplaceCollectionsFromClient: [],
-  setMarketplaceCollectionsFromClient: () => {},
-  marketplaceCollectionPluginsMapFromClient: {},
-  setMarketplaceCollectionPluginsMapFromClient: () => {},
-  isLoading: false,
-})
+export const [,, MarketplaceContext] = createSelectorCtx<MarketplaceContextValue>()
 
 type MarketplaceContextProviderProps = {
   children: ReactNode

@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 import {
-  createContext,
   useContextSelector,
 } from 'use-context-selector'
 import { useSelector as useAppContextSelector } from '@/context/app-context'
@@ -15,6 +14,7 @@ import type { PluginDetail } from '../types'
 import type { FilterState } from './filter-management'
 import { useTranslation } from 'react-i18next'
 import { useTabSearchParams } from '@/hooks/use-tab-searchparams'
+import { createSelectorCtx } from '@/utils/context'
 
 export type PluginPageContextValue = {
   containerRef: React.RefObject<HTMLDivElement>
@@ -27,20 +27,7 @@ export type PluginPageContextValue = {
   options: Array<{ value: string, text: string }>
 }
 
-export const PluginPageContext = createContext<PluginPageContextValue>({
-  containerRef: { current: null },
-  currentPluginDetail: undefined,
-  setCurrentPluginDetail: () => { },
-  filters: {
-    categories: [],
-    tags: [],
-    searchQuery: '',
-  },
-  setFilters: () => { },
-  activeTab: '',
-  setActiveTab: () => { },
-  options: [],
-})
+export const [,, PluginPageContext] = createSelectorCtx<PluginPageContextValue>()
 
 type PluginPageContextProviderProps = {
   children: ReactNode

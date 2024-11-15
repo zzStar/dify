@@ -1,7 +1,6 @@
 'use client'
 
 import type { RefObject } from 'react'
-import { createContext, useContext } from 'use-context-selector'
 import type {
   Callback,
   ChatConfig,
@@ -15,8 +14,9 @@ import type {
   AppMeta,
   ConversationItem,
 } from '@/models/share'
+import { createSelectorCtx } from '@/utils/context'
 
-export interface ChatWithHistoryContextValue {
+export type ChatWithHistoryContextValue = {
   appInfoError?: any
   appInfoLoading?: boolean
   appMeta?: AppMeta
@@ -51,29 +51,4 @@ export interface ChatWithHistoryContextValue {
   themeBuilder?: ThemeBuilder
 }
 
-export const ChatWithHistoryContext = createContext<ChatWithHistoryContextValue>({
-  currentConversationId: '',
-  appPrevChatList: [],
-  pinnedConversationList: [],
-  conversationList: [],
-  showConfigPanelBeforeChat: false,
-  newConversationInputs: {},
-  newConversationInputsRef: { current: {} },
-  handleNewConversationInputsChange: () => {},
-  inputsForms: [],
-  handleNewConversation: () => {},
-  handleStartChat: () => {},
-  handleChangeConversation: () => {},
-  handlePinConversation: () => {},
-  handleUnpinConversation: () => {},
-  handleDeleteConversation: () => {},
-  conversationRenaming: false,
-  handleRenameConversation: () => {},
-  handleNewConversationCompleted: () => {},
-  chatShouldReloadKey: '',
-  isMobile: false,
-  isInstalledApp: false,
-  handleFeedback: () => {},
-  currentChatInstanceRef: { current: { handleStop: () => {} } },
-})
-export const useChatWithHistoryContext = () => useContext(ChatWithHistoryContext)
+export const [, useChatWithHistoryContext, ChatWithHistoryContext] = createSelectorCtx<ChatWithHistoryContextValue>()

@@ -1,7 +1,6 @@
 'use client'
 
 import type { RefObject } from 'react'
-import { createContext, useContext } from 'use-context-selector'
 import type {
   ChatConfig,
   ChatItem,
@@ -14,8 +13,9 @@ import type {
   AppMeta,
   ConversationItem,
 } from '@/models/share'
+import { createSelectorCtx } from '@/utils/context'
 
-export interface EmbeddedChatbotContextValue {
+export type EmbeddedChatbotContextValue = {
   appInfoError?: any
   appInfoLoading?: boolean
   appMeta?: AppMeta
@@ -45,24 +45,4 @@ export interface EmbeddedChatbotContextValue {
   themeBuilder?: ThemeBuilder
 }
 
-export const EmbeddedChatbotContext = createContext<EmbeddedChatbotContextValue>({
-  currentConversationId: '',
-  appPrevChatList: [],
-  pinnedConversationList: [],
-  conversationList: [],
-  showConfigPanelBeforeChat: false,
-  newConversationInputs: {},
-  newConversationInputsRef: { current: {} },
-  handleNewConversationInputsChange: () => {},
-  inputsForms: [],
-  handleNewConversation: () => {},
-  handleStartChat: () => {},
-  handleChangeConversation: () => {},
-  handleNewConversationCompleted: () => {},
-  chatShouldReloadKey: '',
-  isMobile: false,
-  isInstalledApp: false,
-  handleFeedback: () => {},
-  currentChatInstanceRef: { current: { handleStop: () => {} } },
-})
-export const useEmbeddedChatbotContext = () => useContext(EmbeddedChatbotContext)
+export const [, useEmbeddedChatbotContext, EmbeddedChatbotContext] = createSelectorCtx<EmbeddedChatbotContextValue>()
