@@ -132,13 +132,9 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          digests=$(cat /tmp/digests/* | awk '{print $1}')
-          echo "Digest: $digests"
-
           docker buildx imagetools create \
-            -t ${{ env[matrix.image_name_env] }}:${{ env.DOCKER_TAG }} \
-            $digests
-
+            -t ${{ env[matrix.image_name_env] }}:${{ env.DOCKER_TAG }}
+            
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env[matrix.image_name_env] }}:${{ env.DOCKER_TAG }}
