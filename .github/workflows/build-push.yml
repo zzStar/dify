@@ -76,7 +76,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           build-args: COMMIT_SHA=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ env[matrix.image_name_env] }}:${{ env.DOCKER_TAG }},push-by-digest=true,name-canonical=true,push=true
+          outputs: type=image,name=${{ env[matrix.image_name_env] }}:${{ env.DOCKER_TAG }},push=true
           cache-from: type=gha,scope=${{ matrix.service_name }}
           cache-to: type=gha,mode=max,scope=${{ matrix.service_name }}
 
@@ -133,7 +133,7 @@ jobs:
         working-directory: /tmp/digests
         run: |
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ env[matrix.image_name_env] }}@sha256:%s ' *)
+            $(printf '${{ env[matrix.image_name_env] }}@sha256:%s ' $(cat /tmp/digests/*))
 
       - name: Inspect image
         run: |
