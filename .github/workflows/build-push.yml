@@ -99,14 +99,14 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'langgenius/dify'
     strategy:
-        matrix:
-          include:
-            - service_name: "merge-api-images"
-              image_name_env: "DIFY_API_IMAGE_NAME"
-              context: "api"
-            - service_name: "merge-web-images"
-              image_name_env: "DIFY_WEB_IMAGE_NAME"
-              context: "web"
+      matrix:
+        include:
+          - service_name: "merge-api-images"
+            image_name_env: "DIFY_API_IMAGE_NAME"
+            context: "api"
+          - service_name: "merge-web-images"
+            image_name_env: "DIFY_WEB_IMAGE_NAME"
+            context: "web"
     steps:
       - name: Download digests
         uses: actions/download-artifact@v4
@@ -132,14 +132,12 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          # 获取所有 digest 文件内容
-          digests=$(cat /tmp/digests/*)
+          digests=$(cat /tmp/digests/* | awk '{print $1}')
           echo "Digest: $digests"
 
-          # 创建并推送 manifest list，使用 DOCKER_TAG 作为标签
           docker buildx imagetools create \
             -t ${{ env[matrix.image_name_env] }}:${{ env.DOCKER_TAG }} \
-            ${matrix.image_name_env}@sha256:$digests
+            $digests
 
       - name: Inspect image
         run: |
