@@ -1,27 +1,27 @@
 import datetime
 
 import pytz
-from configs import dify_config
-from constants.languages import supported_language
-from controllers.console import api
-from controllers.console.workspace.error import (AccountAlreadyInitedError,
-                                                 CurrentPasswordIncorrectError,
-                                                 InvalidInvitationCodeError,
-                                                 RepeatPasswordNotMatchError)
-from controllers.console.wraps import (account_initialization_required,
-                                       enterprise_license_required,
-                                       setup_required)
-from extensions.ext_database import db
-from fields.member_fields import account_fields
 from flask import request
 from flask_login import current_user
 from flask_restful import Resource, fields, marshal_with, reqparse
+
+from configs import dify_config
+from constants.languages import supported_language
+from controllers.console import api
+from controllers.console.workspace.error import (
+    AccountAlreadyInitedError,
+    CurrentPasswordIncorrectError,
+    InvalidInvitationCodeError,
+    RepeatPasswordNotMatchError,
+)
+from controllers.console.wraps import account_initialization_required, enterprise_license_required, setup_required
+from extensions.ext_database import db
+from fields.member_fields import account_fields
 from libs.helper import TimestampField, timezone
 from libs.login import login_required
 from models import AccountIntegrate, InvitationCode
 from services.account_service import AccountService
-from services.errors.account import \
-    CurrentPasswordIncorrectError as ServiceCurrentPasswordIncorrectError
+from services.errors.account import CurrentPasswordIncorrectError as ServiceCurrentPasswordIncorrectError
 
 
 class AccountInitApi(Resource):
@@ -243,7 +243,6 @@ class AccountIntegrateApi(Resource):
 
 
 class AccountDeleteVerifyApi(Resource):
-
     @setup_required
     @login_required
     @account_initialization_required
@@ -260,7 +259,6 @@ class AccountDeleteVerifyApi(Resource):
 
 
 class AccountDeleteApi(Resource):
-
     @setup_required
     @login_required
     @account_initialization_required
