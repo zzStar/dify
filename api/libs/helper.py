@@ -8,18 +8,16 @@ import time
 import uuid
 from collections.abc import Generator, Mapping
 from datetime import datetime
-from datetime import timezone as tz
 from hashlib import sha256
 from typing import Any, Optional, Union, cast
 from zoneinfo import available_timezones
-
-from flask import Response, stream_with_context
-from flask_restful import fields
 
 from configs import dify_config
 from core.app.features.rate_limiting.rate_limit import RateLimitGenerator
 from core.file import helpers as file_helpers
 from extensions.ext_redis import redis_client
+from flask import Response, stream_with_context
+from flask_restful import fields
 from models.account import Account
 
 
@@ -298,24 +296,3 @@ class RateLimiter:
 
         redis_client.zadd(key, {current_time: current_time})
         redis_client.expire(key, self.time_window * 2)
-
-
-def get_current_datetime():
-    return datetime.now(tz.utc).replace(tzinfo=None)
-
-
-def serialize_sqlalchemy(obj):
-    """
-    Serializes an SQLAlchemy object into a JSON string.
-    """
-    data = {}
-    for column in obj.__table__.columns:
-        value = getattr(obj, column.name)
-        if isinstance(value, datetime):
-            data[column.name] = value.isoformat()  # ISO 8601 format for datetime
-        elif isinstance(value, uuid.UUID):
-            data[column.name] = str(value)  # String representation for UUID
-        else:
-            data[column.name] = value
-
-    return json.dumps(data, separators=(",", ":"))
