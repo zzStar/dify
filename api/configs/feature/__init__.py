@@ -1,18 +1,10 @@
 from typing import Annotated, Literal, Optional
 
-from pydantic import (
-    AliasChoices,
-    Field,
-    HttpUrl,
-    NegativeInt,
-    NonNegativeInt,
-    PositiveFloat,
-    PositiveInt,
-    computed_field,
-)
-from pydantic_settings import BaseSettings
-
 from configs.feature.hosted_service import HostedServiceConfig
+from pydantic import (AliasChoices, Field, HttpUrl, NegativeInt,
+                      NonNegativeInt, PositiveFloat, PositiveInt,
+                      computed_field)
+from pydantic_settings import BaseSettings
 
 
 class SecurityConfig(BaseSettings):
@@ -767,13 +759,6 @@ class LoginConfig(BaseSettings):
     )
 
 
-class RegisterConfig(BaseSettings):
-    EMAIL_FREEZE_PERIOD_IN_DAYS: PositiveInt = Field(
-        description="Freeze period in days for re-registering with the same email",
-        default=30,
-    )
-
-
 class AccountConfig(BaseSettings):
     ACCOUNT_DELETION_TOKEN_EXPIRY_MINUTES: PositiveInt = Field(
         description="Duration in minutes for which a account deletion token remains valid",
@@ -808,7 +793,6 @@ class FeatureConfig(
     WorkflowNodeExecutionConfig,
     WorkspaceConfig,
     LoginConfig,
-    RegisterConfig,
     AccountConfig,
     # hosted services config
     HostedServiceConfig,
