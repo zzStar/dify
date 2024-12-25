@@ -1,6 +1,7 @@
 import datetime
 
 import pytz
+from api.services.billing_service import BillingService
 from flask import request
 from flask_login import current_user
 from flask_restful import Resource, fields, marshal_with, reqparse
@@ -279,6 +280,21 @@ class AccountDeleteApi(Resource):
         return {"result": "success"}
 
 
+class AccountDeleleUpdateFeedbackApi(Resource):
+    @setup_required
+    def post(self):
+        account = current_user
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("email", type=str, required=True, location="json")
+        parser.add_argument("feedback", type=str, required=True, location="json")
+        args = parser.parse_args()
+
+        BillingService.update_account_eletion_feedback(args["email"], args["feedback"])
+
+        return {"result": "success"}
+
+
 # Register API resources
 api.add_resource(AccountInitApi, "/account/init")
 api.add_resource(AccountProfileApi, "/account/profile")
@@ -291,5 +307,6 @@ api.add_resource(AccountPasswordApi, "/account/password")
 api.add_resource(AccountIntegrateApi, "/account/integrates")
 api.add_resource(AccountDeleteVerifyApi, "/account/delete/verify")
 api.add_resource(AccountDeleteApi, "/account/delete")
+api.add_resource(AccountDeleleUpdateFeedbackApi, "/account/delete/feedback")
 # api.add_resource(AccountEmailApi, '/account/email')
 # api.add_resource(AccountEmailVerifyApi, '/account/email-verify')
