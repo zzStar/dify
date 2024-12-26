@@ -6,7 +6,7 @@ import secrets
 import uuid
 from datetime import UTC, datetime, timedelta
 from hashlib import sha256
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 from pydantic import BaseModel
 from sqlalchemy import func
@@ -125,7 +125,7 @@ class AccountService:
             account.last_active_at = datetime.now(UTC).replace(tzinfo=None)
             db.session.commit()
 
-        return account
+        return cast(Account, account)
 
     @staticmethod
     def get_account_jwt_token(account: Account) -> str:
@@ -138,7 +138,7 @@ class AccountService:
             "sub": "Console API Passport",
         }
 
-        token = PassportService().issue(payload)
+        token: str = PassportService().issue(payload)
         return token
 
     @staticmethod
@@ -170,7 +170,7 @@ class AccountService:
 
         db.session.commit()
 
-        return account
+        return cast(Account, account)
 
     @staticmethod
     def update_account_password(account, password, new_password):
@@ -395,6 +395,8 @@ class AccountService:
         language: Optional[str] = "en-US",
     ):
         account_email = account.email if account else email
+        if account_email is None:
+            raise ValueError("Email must be provided.")
 
         if cls.reset_password_rate_limiter.is_rate_limited(account_email):
             from controllers.console.auth.error import PasswordResetRateLimitExceededError
@@ -430,6 +432,8 @@ class AccountService:
     def send_email_code_login_email(
         cls, account: Optional[Account] = None, email: Optional[str] = None, language: Optional[str] = "en-US"
     ):
+        if email is None:
+            raise ValueError("Email must be provided.")
         if cls.email_code_login_rate_limiter.is_rate_limited(email):
             from controllers.console.auth.error import EmailCodeLoginRateLimitExceededError
 
@@ -722,7 +726,7 @@ class TenantService:
     @staticmethod
     def get_tenant_count() -> int:
         """Get tenant count"""
-        return db.session.query(func.count(Tenant.id)).scalar()
+        return cast(int, db.session.query(func.count(Tenant.id)).scalar())
 
     @staticmethod
     def check_member_permission(tenant: Tenant, operator: Account, member: Account | None, action: str) -> None:
@@ -786,10 +790,10 @@ class TenantService:
         db.session.commit()
 
     @staticmethod
-    def get_custom_config(tenant_id: str) -> None:
-        tenant = db.session.query(Tenant).filter(Tenant.id == tenant_id).one_or_404()
+    def get_custom_config(tenant_id: str) -> dict:
+        tenant = Tenant.query.filter(Tenant.id == tenant_id).one_or_404()
 
-        return tenant.custom_config_dict
+        return cast(dict, tenant.custom_config_dict)
 
 
 class RegisterService:
@@ -846,6 +850,7 @@ class RegisterService:
         language: Optional[str] = None,
         status: Optional[AccountStatus] = None,
         is_setup: Optional[bool] = False,
+        create_workspace_required: Optional[bool] = True,
     ) -> Account:
         db.session.begin_nested()
         """Register account"""
@@ -864,10 +869,10 @@ class RegisterService:
             account.status = AccountStatus.ACTIVE.value if not status else status.value
             account.initialized_at = datetime.now(UTC).replace(tzinfo=None)
 
-            if open_id is not None or provider is not None:
+            if open_id is not None and provider is not None:
                 AccountService.link_account_integrate(provider, open_id, account)
 
-            if FeatureService.get_system_features().is_allow_create_workspace:
+            if FeatureService.get_system_features().is_allow_create_workspace and create_workspace_required:
                 tenant = TenantService.create_tenant(f"{account.name}'s Workspace")
                 TenantService.create_tenant_member(tenant, account, role="owner")
                 account.current_tenant = tenant
@@ -885,10 +890,11 @@ class RegisterService:
 
     @classmethod
     def invite_new_member(
-        cls, tenant: Tenant, email: str, language: str, role: str = "normal", inviter: Account = None
+        cls, tenant: Tenant, email: str, language: str, role: str = "normal", inviter: Optional[Account] = None
     ) -> str:
         """Invite new member"""
         account = Account.query.filter_by(email=email).first()
+        assert inviter is not None, "Inviter must be provided."
 
         if not account:
             TenantService.check_member_permission(tenant, inviter, None, "add")
@@ -951,7 +957,9 @@ class RegisterService:
             redis_client.delete(cls._get_invitation_token_key(token))
 
     @classmethod
-    def get_invitation_if_token_valid(cls, workspace_id: str, email: str, token: str) -> Optional[dict[str, Any]]:
+    def get_invitation_if_token_valid(
+        cls, workspace_id: Optional[str], email: str, token: str
+    ) -> Optional[dict[str, Any]]:
         invitation_data = cls._get_invitation_by_token(token, workspace_id, email)
         if not invitation_data:
             return None
@@ -1010,7 +1018,7 @@ class RegisterService:
             if not data:
                 return None
 
-            invitation = json.loads(data)
+            invitation: dict = json.loads(data)
             return invitation
 
 
