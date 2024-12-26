@@ -861,10 +861,6 @@ class RegisterService:
     ) -> Account:
         db.session.begin_nested()
         """Register account"""
-        if dify_config.BILLING_ENABLED and BillingService.is_email_in_freeze(email):
-            raise AccountRegisterError(
-                "Unable to re-register the account because the deletion occurred less than 30 days ago"
-            )
         try:
             account = AccountService.create_account(
                 email=email,
