@@ -9,6 +9,7 @@ from werkzeug.exceptions import Unauthorized
 
 from configs import dify_config
 from constants.languages import languages
+from controllers.console.error import AccountOnRegisterError
 from events.tenant_event import tenant_was_created
 from extensions.ext_database import db
 from libs.helper import extract_remote_ip
@@ -99,6 +100,8 @@ class OAuthCallback(Resource):
                 f"{dify_config.CONSOLE_WEB_URL}/signin"
                 "?message=Workspace not found, please contact system admin to invite you to join in a workspace."
             )
+        except AccountOnRegisterError as e:
+            return redirect(f"{dify_config.CONSOLE_WEB_URL}/signin?message={e.description}")
 
         # Check account status
         if account.status == AccountStatus.BANNED.value:

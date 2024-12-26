@@ -11,6 +11,7 @@ from controllers.console import api
 from controllers.console.workspace.error import (
     AccountAlreadyInitedError,
     CurrentPasswordIncorrectError,
+    InvalidAccountDeletionCodeError,
     InvalidInvitationCodeError,
     RepeatPasswordNotMatchError,
 )
@@ -250,11 +251,8 @@ class AccountDeleteVerifyApi(Resource):
     def get(self):
         account = current_user
 
-        try:
-            token, code = AccountService.generate_account_deletion_verification_code(account)
-            AccountService.send_account_delete_verification_email(account, code)
-        except Exception as e:
-            return {"result": "fail", "error": str(e)}, 429
+        token, code = AccountService.generate_account_deletion_verification_code(account)
+        AccountService.send_account_delete_verification_email(account, code)
 
         return {"result": "success", "data": token}
 
@@ -269,18 +267,17 @@ class AccountDeleteApi(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument("token", type=str, required=True, location="json")
         parser.add_argument("code", type=str, required=True, location="json")
-        parser.add_argument("reason", type=str, required=True, location="json")
         args = parser.parse_args()
 
         if not AccountService.verify_account_deletion_code(args["token"], args["code"]):
-            raise ValueError("Invalid verification code.")
+            raise InvalidAccountDeletionCodeError()
 
-        AccountService.delete_account(account, args["reason"])
+        AccountService.delete_account(account)
 
         return {"result": "success"}
 
 
-class AccountDeleleUpdateFeedbackApi(Resource):
+class AccountDeleteUpdateFeedbackApi(Resource):
     @setup_required
     def post(self):
         account = current_user
@@ -307,6 +304,6 @@ api.add_resource(AccountPasswordApi, "/account/password")
 api.add_resource(AccountIntegrateApi, "/account/integrates")
 api.add_resource(AccountDeleteVerifyApi, "/account/delete/verify")
 api.add_resource(AccountDeleteApi, "/account/delete")
-api.add_resource(AccountDeleleUpdateFeedbackApi, "/account/delete/feedback")
+api.add_resource(AccountDeleteUpdateFeedbackApi, "/account/delete/feedback")
 # api.add_resource(AccountEmailApi, '/account/email')
 # api.add_resource(AccountEmailVerifyApi, '/account/email-verify')

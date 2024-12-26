@@ -6,12 +6,7 @@ from flask_restful import Resource, reqparse  # type: ignore
 
 from constants.languages import languages
 from controllers.console import api
-from controllers.console.auth.error import (
-    EmailCodeError,
-    InvalidEmailError,
-    InvalidTokenError,
-    PasswordMismatchError,
-)
+from controllers.console.auth.error import EmailCodeError, InvalidEmailError, InvalidTokenError, PasswordMismatchError
 from controllers.console.error import AccountNotFound, EmailSendIpLimitError
 from controllers.console.wraps import setup_required
 from events.tenant_event import tenant_was_created

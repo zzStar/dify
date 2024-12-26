@@ -14,6 +14,7 @@ from werkzeug.exceptions import Unauthorized
 
 from configs import dify_config
 from constants.languages import language_timezone_mapping, languages
+from controllers.console.error import AccountOnRegisterError
 from events.tenant_event import tenant_was_created
 from extensions.ext_database import db
 from extensions.ext_redis import redis_client
@@ -209,8 +210,8 @@ class AccountService:
             raise AccountNotFound()
 
         if dify_config.BILLING_ENABLED and BillingService.is_email_in_freeze(email):
-            raise AccountRegisterError(
-                "Unable to re-register the account because the deletion occurred less than 30 days ago"
+            raise AccountOnRegisterError(
+                description="Unable to re-register the account because the deletion occurred less than 30 days ago"
             )
 
         account = Account()
@@ -284,9 +285,9 @@ class AccountService:
         return True
 
     @staticmethod
-    def delete_account(account: Account, reason="") -> None:
+    def delete_account(account: Account) -> None:
         """Delete account. This method only adds a task to the queue for deletion."""
-        delete_account_task.delay(account.id, reason)
+        delete_account_task.delay(account.id)
 
     @staticmethod
     def link_account_integrate(provider: str, open_id: str, account: Account) -> None:
@@ -467,6 +468,11 @@ class AccountService:
 
         if account.status == AccountStatus.BANNED.value:
             raise Unauthorized("Account is banned.")
+
+        if dify_config.BILLING_ENABLED and BillingService.is_email_in_freeze(email):
+            raise AccountOnRegisterError(
+                description="Unable to re-register the account because the deletion occurred less than 30 days ago"
+            )
 
         return account
 
