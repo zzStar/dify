@@ -83,7 +83,7 @@ class FeatureService:
             cls._fulfill_params_from_billing_api(features, tenant_id)
 
         return features
-    
+
     @classmethod
     def get_knowledge_rate_limit(cls, tenant_id: str):
         knowledge_rate_limit = KnowledgeRateLimitModel()
