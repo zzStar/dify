@@ -5,6 +5,7 @@ on:
     branches:
       - "main"
       - "deploy/dev"
+      - "release/0.15.0-blocking"
   release:
     types: [published]
 
