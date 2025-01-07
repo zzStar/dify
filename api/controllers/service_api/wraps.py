@@ -158,7 +158,9 @@ def cloud_edition_billing_rate_limit_check(resource: str, api_token_type: str):
                     request_count = redis_client.zcard(key)
 
                     if request_count > knowledge_rate_limit.limit:
-                        raise Forbidden(403, "Sorry, you have reached the rate limit of your subscription.")
+                        raise Forbidden(
+                            "Sorry, you have reached the knowledge base request rate limit of your subscription."
+                        )
             return view(*args, **kwargs)
 
         return decorated
