@@ -22,6 +22,7 @@ type Props = {
 }
 
 const KeyValue = ({ icon, label, tooltip }: { icon: ReactNode; label: string; tooltip?: ReactNode }) => {
+  console.log(label)
   return (
     <div className='flex text-text-tertiary'>
       <div className='size-4 flex items-center justify-center'>
@@ -35,7 +36,7 @@ const KeyValue = ({ icon, label, tooltip }: { icon: ReactNode; label: string; to
           popupClassName='w-[200px]'
         >
           <div className='size-4 flex items-center justify-center'>
-            <RiQuestionLine className='text-text-secondary' />
+            <RiQuestionLine className='text-text-quaternary' />
           </div>
         </Tooltip>
       )}
