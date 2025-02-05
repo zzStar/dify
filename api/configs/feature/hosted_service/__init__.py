@@ -210,7 +210,7 @@ class HostedDeepseekConfig(BaseSettings):
     )
     HOSTED_DEEPSEEK_QUOTA_LIMIT: NonNegativeInt = Field(
         description="Quota limit for hosted DeepSeek service usage",
-        default=100000,
+        default=0,
     )
 
 
