@@ -484,7 +484,7 @@ class ProviderManager:
 
             provider_quota_to_provider_record_dict = {}
             for provider_record in provider_records:
-                if provider_record.provider_type != ProviderType.SYSTEM.value:
+                if provider_record.provider_type != ProviderType.SYSTEM:
                     continue
 
                 provider_quota_to_provider_record_dict[ProviderQuotaType.value_of(provider_record.quota_type)] = (
@@ -496,7 +496,7 @@ class ProviderManager:
                     # Init trial provider records if not exists
                     if ProviderQuotaType.TRIAL not in provider_quota_to_provider_record_dict:
                         try:
-                            # FIXME ignore the type errork, onyl TrialHostingQuota has limit need to change the logic
+                            # FIXME ignore the type error, onyl TrialHostingQuota has limit need to change the logic
                             provider_record = Provider(
                                 tenant_id=tenant_id,
                                 provider_name=provider_name,

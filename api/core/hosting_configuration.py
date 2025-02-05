@@ -155,21 +155,19 @@ class HostingConfiguration:
         )
 
     def init_deepseek(self) -> HostingProvider:
-        quota_unit = QuotaUnit.TOKENS
-        quotas: list[HostingQuota] = []
+        if not dify_config.HOSTED_DEEPSEEK_ENABLED:
+            return HostingProvider(
+                enabled=False,
+                quota_unit=QuotaUnit.TOKENS,
+            )
 
-        if dify_config.HOSTED_DEEPSEEK_ENABLED:
-            paid_models = self.parse_restrict_models_from_env(dify_config.HOSTED_DEEPSEEK_MODELS)
-            paid_quota = PaidHostingQuota(restrict_models=paid_models)
-            quotas.append(paid_quota)
-        if len(quotas) > 0:
-            credentials = {
-                "api_key": dify_config.HOSTED_DEEPSEEK_API_KEY,
-            }
-            return HostingProvider(enabled=True, credentials=credentials, quota_unit=quota_unit, quotas=quotas)
+        trial_quota = TrialHostingQuota(quota_limit=dify_config.HOSTED_DEEPSEEK_QUOTA_LIMIT)
+        quotas: list[HostingQuota] = [trial_quota]
         return HostingProvider(
-            enabled=False,
-            quota_unit=quota_unit,
+            enabled=True,
+            credentials={"api_key": dify_config.HOSTED_DEEPSEEK_API_KEY},
+            quota_unit=QuotaUnit.TOKENS,
+            quotas=quotas,
         )
 
     def init_anthropic(self) -> HostingProvider:

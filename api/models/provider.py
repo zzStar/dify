@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, StrEnum
 
 from sqlalchemy import func
 
@@ -6,7 +6,7 @@ from .engine import db
 from .types import StringUUID
 
 
-class ProviderType(Enum):
+class ProviderType(StrEnum):
     CUSTOM = "custom"
     SYSTEM = "system"
 

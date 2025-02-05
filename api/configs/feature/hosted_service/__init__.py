@@ -208,6 +208,10 @@ class HostedDeepseekConfig(BaseSettings):
         description="Comma-separated list of available models for paid access",
         default="",
     )
+    HOSTED_DEEPSEEK_QUOTA_LIMIT: NonNegativeInt = Field(
+        description="Quota limit for hosted DeepSeek service usage",
+        default=100000,
+    )
 
 
 class HostedServiceConfig(
