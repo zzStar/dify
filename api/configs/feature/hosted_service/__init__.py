@@ -191,6 +191,25 @@ class HostedFetchAppTemplateConfig(BaseSettings):
     )
 
 
+class HostedDeepseekConfig(BaseSettings):
+    """
+    Configuration for hosted Deepseek service
+    """
+
+    HOSTED_DEEPSEEK_ENABLED: bool = Field(
+        description="Enable hosted Deepseek service",
+        default=False,
+    )
+    HOSTED_DEEPSEEK_API_KEY: str = Field(
+        description="API key for hosted DeepSeek service",
+        default="",
+    )
+    HOSTED_DEEPSEEK_MODELS: str = Field(
+        description="Comma-separated list of available models for paid access",
+        default="",
+    )
+
+
 class HostedServiceConfig(
     # place the configs in alphabet order
     HostedAnthropicConfig,
@@ -200,6 +219,7 @@ class HostedServiceConfig(
     HostedOpenAiConfig,
     HostedSparkConfig,
     HostedZhipuAIConfig,
+    HostedDeepseekConfig,
     # moderation
     HostedModerationConfig,
 ):

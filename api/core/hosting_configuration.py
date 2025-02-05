@@ -54,11 +54,11 @@ class HostingConfiguration:
         self.provider_map["minimax"] = self.init_minimax()
         self.provider_map["spark"] = self.init_spark()
         self.provider_map["zhipuai"] = self.init_zhipuai()
+        self.provider_map["deepseek"] = self.init_deepseek()
 
         self.moderation_config = self.init_moderation_config()
 
-    @staticmethod
-    def init_azure_openai() -> HostingProvider:
+    def init_azure_openai(self) -> HostingProvider:
         quota_unit = QuotaUnit.TIMES
         if dify_config.HOSTED_AZURE_OPENAI_ENABLED:
             credentials = {
@@ -127,12 +127,12 @@ class HostingConfiguration:
 
         if dify_config.HOSTED_OPENAI_TRIAL_ENABLED:
             hosted_quota_limit = dify_config.HOSTED_OPENAI_QUOTA_LIMIT
-            trial_models = self.parse_restrict_models_from_env("HOSTED_OPENAI_TRIAL_MODELS")
+            trial_models = self.parse_restrict_models_from_env(dify_config.HOSTED_OPENAI_TRIAL_MODELS)
             trial_quota = TrialHostingQuota(quota_limit=hosted_quota_limit, restrict_models=trial_models)
             quotas.append(trial_quota)
 
         if dify_config.HOSTED_OPENAI_PAID_ENABLED:
-            paid_models = self.parse_restrict_models_from_env("HOSTED_OPENAI_PAID_MODELS")
+            paid_models = self.parse_restrict_models_from_env(dify_config.HOSTED_OPENAI_PAID_MODELS)
             paid_quota = PaidHostingQuota(restrict_models=paid_models)
             quotas.append(paid_quota)
 
@@ -154,8 +154,25 @@ class HostingConfiguration:
             quota_unit=quota_unit,
         )
 
-    @staticmethod
-    def init_anthropic() -> HostingProvider:
+    def init_deepseek(self) -> HostingProvider:
+        quota_unit = QuotaUnit.TOKENS
+        quotas: list[HostingQuota] = []
+
+        if dify_config.HOSTED_DEEPSEEK_ENABLED:
+            paid_models = self.parse_restrict_models_from_env(dify_config.HOSTED_DEEPSEEK_MODELS)
+            paid_quota = PaidHostingQuota(restrict_models=paid_models)
+            quotas.append(paid_quota)
+        if len(quotas) > 0:
+            credentials = {
+                "api_key": dify_config.HOSTED_DEEPSEEK_API_KEY,
+            }
+            return HostingProvider(enabled=True, credentials=credentials, quota_unit=quota_unit, quotas=quotas)
+        return HostingProvider(
+            enabled=False,
+            quota_unit=quota_unit,
+        )
+
+    def init_anthropic(self) -> HostingProvider:
         quota_unit = QuotaUnit.TOKENS
         quotas: list[HostingQuota] = []
 
@@ -183,8 +200,7 @@ class HostingConfiguration:
             quota_unit=quota_unit,
         )
 
-    @staticmethod
-    def init_minimax() -> HostingProvider:
+    def init_minimax(self) -> HostingProvider:
         quota_unit = QuotaUnit.TOKENS
         if dify_config.HOSTED_MINIMAX_ENABLED:
             quotas: list[HostingQuota] = [FreeHostingQuota()]
@@ -201,8 +217,7 @@ class HostingConfiguration:
             quota_unit=quota_unit,
         )
 
-    @staticmethod
-    def init_spark() -> HostingProvider:
+    def init_spark(self) -> HostingProvider:
         quota_unit = QuotaUnit.TOKENS
         if dify_config.HOSTED_SPARK_ENABLED:
             quotas: list[HostingQuota] = [FreeHostingQuota()]
@@ -219,8 +234,7 @@ class HostingConfiguration:
             quota_unit=quota_unit,
         )
 
-    @staticmethod
-    def init_zhipuai() -> HostingProvider:
+    def init_zhipuai(self) -> HostingProvider:
         quota_unit = QuotaUnit.TOKENS
         if dify_config.HOSTED_ZHIPUAI_ENABLED:
             quotas: list[HostingQuota] = [FreeHostingQuota()]
@@ -237,19 +251,14 @@ class HostingConfiguration:
             quota_unit=quota_unit,
         )
 
-    @staticmethod
-    def init_moderation_config() -> HostedModerationConfig:
+    def init_moderation_config(self) -> HostedModerationConfig:
         if dify_config.HOSTED_MODERATION_ENABLED and dify_config.HOSTED_MODERATION_PROVIDERS:
             return HostedModerationConfig(enabled=True, providers=dify_config.HOSTED_MODERATION_PROVIDERS.split(","))
 
         return HostedModerationConfig(enabled=False)
 
-    @staticmethod
-    def parse_restrict_models_from_env(env_var: str) -> list[RestrictModel]:
-        models_str = dify_config.model_dump().get(env_var)
-        models_list = models_str.split(",") if models_str else []
-        return [
-            RestrictModel(model=model_name.strip(), model_type=ModelType.LLM)
-            for model_name in models_list
-            if model_name.strip()
-        ]
+    def parse_restrict_models_from_env(self, config_string: str, /) -> list[RestrictModel]:
+        if not config_string.strip():
+            return []
+        name_list = [name.strip() for name in config_string.split(",")]
+        return [RestrictModel(model=name, model_type=ModelType.LLM) for name in name_list]
