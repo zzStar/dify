@@ -161,7 +161,10 @@ class HostingConfiguration:
                 quota_unit=QuotaUnit.TOKENS,
             )
 
-        trial_quota = TrialHostingQuota(quota_limit=dify_config.HOSTED_DEEPSEEK_QUOTA_LIMIT)
+        trial_models = self.parse_restrict_models_from_env(dify_config.HOSTED_DEEPSEEK_MODELS)
+        trial_quota = TrialHostingQuota(
+            quota_limit=dify_config.HOSTED_DEEPSEEK_QUOTA_LIMIT, restrict_models=trial_models
+        )
         quotas: list[HostingQuota] = [trial_quota]
         return HostingProvider(
             enabled=True,
