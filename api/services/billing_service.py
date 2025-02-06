@@ -97,11 +97,6 @@ class BillingService:
         return cls._send_request("POST", "/account/delete-feedback", json=json)
 
     @classmethod
-    def list_compliance_files(cls, tenant_id: str, account_id: str):
-        params = {"account_id": account_id, "tenant_id": tenant_id}
-        return cls._send_request("GET", "/compliance/list", params=params)
-
-    @classmethod
     def get_compliance_download_link(
         cls,
         doc_name: str,
