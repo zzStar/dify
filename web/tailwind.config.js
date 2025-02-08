@@ -114,6 +114,7 @@ const config = {
         'price-premium-text-background': 'var(--color-premium-text-background)',
         'price-enterprise-background': 'var(--color-price-enterprise-background)',
         'grid-mask-background': 'var(--color-grid-mask-background)',
+        'dataset-warning-message-bg': 'var(--color-dataset-warning-message-bg)',
       },
       lineClamp: {
         '20': '20',
