@@ -76,7 +76,7 @@ const translation = {
       description: '文本可以转换成语音。',
       resDes: '文本转音频已启用',
     },
-    citation: {
+    引用和归属: {
       title: '引用和归属',
       description: '显示源文档和生成内容的归属部分。',
       resDes: '引用和归属已启用',

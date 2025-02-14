@@ -131,7 +131,7 @@ const translation = {
   menus: {
     status: 'beta',
     explore: '探索',
-    apps: '工作室',
+    apps: '工作台',
     plugins: '插件',
     pluginsTips: '集成第三方插件或创建与 ChatGPT 兼容的 AI 插件。',
     datasets: '知识库',
@@ -168,12 +168,12 @@ const translation = {
   account: {
     account: '账户',
     myAccount: '我的账户',
-    studio: 'Dify 工作室',
+    studio: '返回工作台',
     avatar: '头像',
     name: '用户名',
     email: '邮箱',
     password: '密码',
-    passwordTip: '如果您不想使用验证码登录，可以设置永久密码',
+    passwordTip: '可以设置永久密码',
     setPassword: '设置密码',
     resetPassword: '重置密码',
     currentPassword: '原密码',

@@ -170,7 +170,7 @@ export default function AccountPage() {
         )
       }
       <div className='mb-6 border-[1px] border-divider-subtle' />
-      <div className='mb-8'>
+      <div className='mb-8' style={{ display: 'none' }}>
         <div className={titleClassName}>{t('common.account.langGeniusAccount')}</div>
         <div className={descriptionClassName}>{t('common.account.langGeniusAccountTip')}</div>
         {!!apps.length && (

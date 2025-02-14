@@ -40,6 +40,9 @@ export default function AppSelector({ isMobile }: IAppSelector) {
   const { plan } = useProviderContext()
   const canEmailSupport = plan.type === Plan.professional || plan.type === Plan.team || plan.type === Plan.enterprise
 
+  // 不显示多余菜单
+  const [showOtherMenu] = useState(false)
+
   const handleLogout = async () => {
     await logout({
       url: '/logout',
@@ -99,10 +102,13 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                       </div>
                     </div>
                   </Menu.Item>
-                  <div className='px-1 py-1'>
-                    <div className='mt-2 px-3 text-xs font-medium text-text-tertiary'>{t('common.userProfile.workspace')}</div>
-                    <WorkplaceSelector />
-                  </div>
+                  {showOtherMenu && (
+                    <div className='px-1 py-1'>
+                      <div className='mt-2 px-3 text-xs font-medium text-text-tertiary'>{t('common.userProfile.workspace')}</div>
+                      <WorkplaceSelector />
+                    </div>
+                  )}
+
                   <div className="px-1 py-1">
                     <Menu.Item>
                       {({ active }) => <Link
@@ -122,7 +128,7 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                         <div>{t('common.userProfile.settings')}</div>
                       </div>}
                     </Menu.Item>
-                    {canEmailSupport && <Menu.Item>
+                    {showOtherMenu && canEmailSupport && <Menu.Item>
                       {({ active }) => <a
                         className={classNames(itemClassName, 'group justify-between',
                           active && 'bg-state-base-hover',
@@ -133,7 +139,7 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                         <ArrowUpRight className='hidden w-[14px] h-[14px] text-text-tertiary group-hover:flex' />
                       </a>}
                     </Menu.Item>}
-                    <Menu.Item>
+                    {showOtherMenu && <Menu.Item>
                       {({ active }) => <Link
                         className={classNames(itemClassName, 'group justify-between',
                           active && 'bg-state-base-hover',
@@ -143,8 +149,8 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                         <div>{t('common.userProfile.communityFeedback')}</div>
                         <ArrowUpRight className='hidden w-[14px] h-[14px] text-text-tertiary group-hover:flex' />
                       </Link>}
-                    </Menu.Item>
-                    <Menu.Item>
+                    </Menu.Item>}
+                    {showOtherMenu && <Menu.Item>
                       {({ active }) => <Link
                         className={classNames(itemClassName, 'group justify-between',
                           active && 'bg-state-base-hover',
@@ -154,8 +160,8 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                         <div>{t('common.userProfile.community')}</div>
                         <ArrowUpRight className='hidden w-[14px] h-[14px] text-text-tertiary group-hover:flex' />
                       </Link>}
-                    </Menu.Item>
-                    <Menu.Item>
+                    </Menu.Item>}
+                    {showOtherMenu && <Menu.Item>
                       {({ active }) => <Link
                         className={classNames(itemClassName, 'group justify-between',
                           active && 'bg-state-base-hover',
@@ -167,8 +173,8 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                         <div>{t('common.userProfile.helpCenter')}</div>
                         <ArrowUpRight className='hidden w-[14px] h-[14px] text-text-tertiary group-hover:flex' />
                       </Link>}
-                    </Menu.Item>
-                    <Menu.Item>
+                    </Menu.Item>}
+                    {showOtherMenu && <Menu.Item>
                       {({ active }) => <Link
                         className={classNames(itemClassName, 'group justify-between',
                           active && 'bg-state-base-hover',
@@ -178,9 +184,9 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                         <div>{t('common.userProfile.roadmap')}</div>
                         <ArrowUpRight className='hidden w-[14px] h-[14px] text-text-tertiary group-hover:flex' />
                       </Link>}
-                    </Menu.Item>
+                    </Menu.Item>}
                     {
-                      document?.body?.getAttribute('data-public-site-about') !== 'hide' && (
+                      showOtherMenu && document?.body?.getAttribute('data-public-site-about') !== 'hide' && (
                         <Menu.Item>
                           {({ active }) => <div className={classNames(itemClassName, 'justify-between',
                             active && 'bg-state-base-hover',

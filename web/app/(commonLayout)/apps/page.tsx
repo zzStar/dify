@@ -11,7 +11,7 @@ import { LicenseStatus } from '@/types/feature'
 const AppList = () => {
   const { t } = useTranslation()
   const systemFeatures = useContextSelector(AppContext, v => v.systemFeatures)
-
+  console.log(systemFeatures) // 打印 systemFeatures 对象
   return (
     <div className='relative flex flex-col overflow-y-auto bg-background-body shrink-0 h-0 grow'>
       <Apps />
