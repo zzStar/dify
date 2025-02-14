@@ -32,7 +32,8 @@ class WorkspaceService:
         assert tenant_account_join is not None, "TenantAccountJoin not found"
         tenant_info["role"] = tenant_account_join.role
 
-        can_replace_logo = FeatureService.get_features(tenant_info["id"]).can_replace_logo
+        # can_replace_logo =  FeatureServicetureService.get_features(tenant_info["id"]).can_replace_logo
+        can_replace_logo = True
 
         if can_replace_logo and TenantService.has_roles(
             tenant, [TenantAccountJoinRole.OWNER, TenantAccountJoinRole.ADMIN]
@@ -43,7 +44,7 @@ class WorkspaceService:
                 if tenant.custom_config_dict.get("replace_webapp_logo")
                 else None
             )
-            remove_webapp_brand = tenant.custom_config_dict.get("remove_webapp_brand", False)
+            remove_webapp_brand = tenant.custom_config_dict.get("remove_webapp_brand", True)
 
             tenant_info["custom_config"] = {
                 "remove_webapp_brand": remove_webapp_brand,

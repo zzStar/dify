@@ -32,7 +32,7 @@ class LicenseStatus(StrEnum):
 
 
 class LicenseModel(BaseModel):
-    status: LicenseStatus = LicenseStatus.NONE
+    status: LicenseStatus = LicenseStatus.ACTIVE
     expired_at: str = ""
 
 
