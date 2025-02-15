@@ -14,12 +14,12 @@ FROM base AS packages
 WORKDIR /app/web
 
 COPY package.json .
-COPY yarn.lock .
+# COPY yarn.lock .
 
 # if you located in China, you can use taobao registry to speed up
-RUN yarn install --frozen-lockfile --registry https://registry.npmmirror.com/
+RUN yarn install --registry https://registry.npmmirror.com
 
-# RUN yarn install --frozen-lockfile
+#RUN yarn install --frozen-lockfile
 
 # build resources
 FROM base AS builder
@@ -55,7 +55,6 @@ COPY --from=builder /app/web/.next/static ./.next/static
 COPY docker/pm2.json ./pm2.json
 COPY docker/entrypoint.sh ./entrypoint.sh
 
-RUN yarn config set registry https://registry.npmmirror.com/
 
 # global runtime packages
 RUN yarn global add pm2 \
