@@ -1,6 +1,5 @@
 import useSWR from 'swr'
 import { useTranslation } from 'react-i18next'
-import DataSourceNotion from './data-source-notion'
 import DataSourceWebsite from './data-source-website'
 import { fetchDataSource } from '@/service/common'
 import { DataSourceProvider } from '@/models/common'
@@ -12,7 +11,7 @@ export default function DataSourcePage() {
 
   return (
     <div className='mb-8'>
-      <DataSourceNotion workspaces={notionWorkspaces} />
+      {/* <DataSourceNotion workspaces={notionWorkspaces} /> */}
       <DataSourceWebsite provider={DataSourceProvider.jinaReader} />
       <DataSourceWebsite provider={DataSourceProvider.fireCrawl} />
     </div>

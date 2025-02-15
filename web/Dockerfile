@@ -55,6 +55,7 @@ COPY --from=builder /app/web/.next/static ./.next/static
 COPY docker/pm2.json ./pm2.json
 COPY docker/entrypoint.sh ./entrypoint.sh
 
+RUN yarn config set registry https://registry.npmmirror.com/
 
 # global runtime packages
 RUN yarn global add pm2 \

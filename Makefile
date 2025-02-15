@@ -1,8 +1,8 @@
 # Variables
-DOCKER_REGISTRY=langgenius
+DOCKER_REGISTRY=registry.cn-beijing.aliyuncs.com/dxhh
 WEB_IMAGE=$(DOCKER_REGISTRY)/dify-web
 API_IMAGE=$(DOCKER_REGISTRY)/dify-api
-VERSION=latest
+VERSION=1.0.6
 
 # Build Docker images
 build-web:
